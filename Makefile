@@ -8,7 +8,8 @@ all :
 	g++ main.cpp sand.cpp -o sand `pkg-config --libs sdl2` `pkg-config --cflags sdl2` ; ./sand
 
 
-
+linux :
+	g++ -o sand_linux main_linux.cpp sand.cpp `sdl2-config --cflags --libs`
 #➜  ~ pkg-config --cflags sdl2
 #-D_THREAD_SAFE -I/opt/homebrew/include -I/opt/homebrew/include/SDL2
 
