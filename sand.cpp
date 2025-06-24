@@ -17,51 +17,78 @@ void show_sand(SDL_Surface *screen, SDL_Rect *rec, std::vector<sand> &thesand)
         /* code */
     }
 }
-void show_sand_neo(SDL_Surface *screen, SDL_Rect *rec, std::vector<std::vector<char>> &thesand)
+
+void update_position_neo(std::vector<std::vector<char> > &thesand)
+{
+        int logicalW = WWIDTH / sandsize;
+    int logicalH = WHEIGHT / sandsize;
+    
+    for (int y = logicalH - 1; y >= 0; --y)
+    {
+        for (int x = logicalW - 1; x >= 0; --x) 
+        {
+            if (thesand[y][x] == SAND)
+            {
+
+                if (y + 1 < logicalH && thesand[y+1][x] == EMPTY)
+                {
+                    thesand[y+1][x] = SAND;
+                    thesand[y][x] = EMPTY;
+                }
+                else if (y + 1 < logicalH)
+                {
+                     bool canMoveLeft = (x - 1 >= 0 && thesand[y+1][x-1] == EMPTY);
+                    bool canMoveRight = (x + 1 < logicalW && thesand[y+1][x+1] == EMPTY);
+                     
+                if(canMoveRight)
+                {
+                        thesand[y+1][x+1] = SAND;
+                        thesand[y][x] = EMPTY;
+                }
+                else if(canMoveLeft)
+                {
+                        thesand[y+1][x-1] = SAND;
+                        thesand[y][x] = EMPTY;
+                }
+                }
+                // if(y + 1 < logicalH && thesand[y+1][x] == SAND)
+                // {
+                //     if (y + 1 < logicalH && thesand[y+1][x+1] == EMPTY)
+                //     {
+                //             thesand[y+1][x+1] = SAND;
+                //             thesand[y][x] = EMPTY;
+                //     }
+                //      if(x > 0 && y + 1 < logicalH && thesand[y+1][x-1] == EMPTY)
+                //     {
+                //         thesand[y+1][x-1] = SAND;
+                //             thesand[y][x] = EMPTY;
+                //     }
+                // }
+            }
+        }
+    }
+}
+
+void show_sand_neo(SDL_Surface *screen, SDL_Rect *rec, std::vector<std::vector<char> > &thesand)
 {
 
-    // std::vector<sand>::iterator it = thesand.begin();
-    // std::cout << thesand.size() << std::endl;
-    // while (it != thesand.end())
-    // {
-    //     rec->x = it->get_x_value();
-    //     rec->y = it->get_y_value();
+    int logicalW = WWIDTH / sandsize;
+    int logicalH = WHEIGHT / sandsize;
 
-    //     // std::cout << "hh " << rec->x <<  " " << rec->y << std::endl;
-    //     SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xFF, 0xB2, 0x80));
 
-    //     it++;
-    //     /* code */
-    // }
-    int x, y;
-    x = WWIDTH;
-    y = WHEIGHT;
-
-    // std::cout << x << " " << y << std::endl;
-    while (y >= WHEIGHT)
+for (int y = logicalH - 1; y >= 0; --y)
     {
-        /* code */
-        x = WWIDTH;
-    // std::cout << x << " " << y << std::endl;
-
-        rec->y = y;
-        while (x >= WWIDTH)
+        for (int x = logicalW - 1; x >= 0; --x) 
         {
-            /* code */
-            std::cout << "miw\n";
-            // if (thesand[y][x] == SAND)
-            // {
-            //     // exit(1);
-            rec->x = x;
-                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xFF, 0xB2, 0x80));
-            //     /* code */
-            // }
-            
-
-            x--;
+            if (thesand[y][x] == SAND)
+            {
+                rec->x = x * sandsize;
+                rec->y = y * sandsize;
+                rec->w = sandsize;
+                rec->h = sandsize;
+                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80));
+            }
         }
-
-        y--;
     }
 }
 

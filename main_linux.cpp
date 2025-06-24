@@ -4,41 +4,37 @@ void clear_window()
 {
 }
 
-void init_window(std::vector<std::vector<char>> &map)
+void init_window(std::vector<std::vector<char> > &map)
 {
-    // std::vector<std::vector<char>> map;
-    std::vector<char> line;
-    int x,y;
-    x=0;
-    y=0;
-    
-    while (y < WHEIGHT)
+    // std::vector<char> line;
+    // int x,y;
+    // x=0;
+    // y=0;
+
+    // while (y < WHEIGHT)
+    // {
+    //     x=0;
+    //     while (x < WWIDTH)
+    //     {
+    //         line.push_back(EMPTY);
+    //         x++;
+    //     }
+    //     map.push_back(line);
+    //     line.clear();
+    //     y++;
+    // }
+    int logicalW = WWIDTH / sandsize;
+    int logicalH = WHEIGHT / sandsize;
+    map.resize(logicalH);
+
+    for (int y = 0; y < logicalH; ++y)
     {
-        x=0;
-        while (x < WWIDTH)
-        {
-            line.push_back(EMPTY);
-            
-            // map[y].push_back(EMPTY);
-            // map.
-            // std::cout << map[y][x] << std::endl;
-            x++;
-        }
-        map.push_back(line);
-        line.clear();
-        y++;
-        
-        /* code */
+        map[y].resize(logicalW, EMPTY);
     }
-    
-
-
-    // return map;
 }
 
 int main()
 {
-
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -72,7 +68,7 @@ int main()
     bool hold = false;
     std::vector<sand> play;
 
-    std::vector<std::vector<char>> themap;
+    std::vector<std::vector<char> > themap;
     init_window(themap);
     // float widthChange = 1.0f;
     // float heightChange = 3.0f;
@@ -101,19 +97,23 @@ int main()
             {
                 hold = false;
             }
+        }
             if (hold)
             {
                 SDL_GetMouseState(&mousex, &mousey);
-                x = mousex;
-                y = mousey;
-                // play.push_back(sand(x,y));
+                // x = mousex;
+                // y = mousey;
+                int logicalX = mousex / sandsize;
+                int logicalY = mousey / sandsize;
 
-                themap[y][x] = SAND;
+                int logicalW = WWIDTH / sandsize;
+                int logicalH = WHEIGHT / sandsize;
 
-                std::cout << x << " " << y << std::endl;
-                // exit(3);
+                if (logicalY >= 0 && logicalY < logicalH && logicalX >= 0 && logicalX < logicalW)
+                {
+                    themap[logicalY][logicalX] = SAND;
+                }
             }
-        }
 
         SDL_GetMouseState(&mousex, &mousey);
 
@@ -125,9 +125,10 @@ int main()
         SDL_FillRect(screenSurface, &rectangle, SDL_MapRGB(screenSurface->format, 0xC2, 0xB2, 0x80));
 
         // show_sand(screenSurface,&particle,play);
-        show_sand_neo(screenSurface,&particle,themap);
+        show_sand_neo(screenSurface, &particle, themap);
 
         SDL_UpdateWindowSurface(window);
+        update_position_neo(themap);
         // update_gravity(play);
         frameTime = SDL_GetTicks() - frameStart;
 

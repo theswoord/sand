@@ -37,9 +37,10 @@ class sand
 };
 
 void show_sand(SDL_Surface *screen ,SDL_Rect *rec ,std::vector<sand> &thesand);
-void show_sand_neo(SDL_Surface *screen ,SDL_Rect *rec ,std::vector<std::vector<char>> &thesand);
+void show_sand_neo(SDL_Surface *screen ,SDL_Rect *rec ,std::vector< std::vector<char> > &thesand);
 
 void update_gravity(std::vector<sand> &thesand);
 
+void update_position_neo(std::vector<std::vector<char> > &thesand);
 
 // bool check_collision(sand &sand);
