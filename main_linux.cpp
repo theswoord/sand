@@ -1,5 +1,8 @@
 #include "sand.hpp"
 
+//  std::random_device rd;
+
+
 void clear_window()
 {
 }

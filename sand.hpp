@@ -4,6 +4,7 @@
 
 #include <unistd.h>
 #include <vector>
+#include <random>
 #define Velocity 3
 #define WWIDTH 800
 #define WHEIGHT 600

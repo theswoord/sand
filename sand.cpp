@@ -69,6 +69,28 @@ void update_position_neo(std::vector<std::vector<char> > &thesand)
     }
 }
 
+Uint32 rand_sand_color()
+{
+
+static std::random_device rd; // Obtain a seed from the hardware
+static std::mt19937 gen(rd()); // Seed the generator
+
+
+    Uint32 select = 0;
+
+
+    // int rnd = gen() %3 ;
+    // if(rnd == 1)
+    // select =  0xFF << 24| 0xC2 <<16 | 0xB2 << 8 | 0x80;
+    // if(rnd == 2)
+    // select =  0xFF << 24| 0xE2 <<16 | 0xCA << 8 | 0x76;
+    // if(rnd == 3)
+    select =  0xFF << 24| 0xCB <<16 | 0xBD << 8 | 0x93;
+
+
+    return(select);
+}
+
 void show_sand_neo(SDL_Surface *screen, SDL_Rect *rec, std::vector<std::vector<char> > &thesand)
 {
 
@@ -86,11 +108,16 @@ for (int y = logicalH - 1; y >= 0; --y)
                 rec->y = y * sandsize;
                 rec->w = sandsize;
                 rec->h = sandsize;
-                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80));
+                // SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80));
+                // SDL_FillRect(screen, rec,  4290949760);
+                SDL_FillRect(screen, rec, rand_sand_color() );
+                // std::cout << SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80) << std::endl ;
+
             }
         }
     }
 }
+
 
 void update_gravity(std::vector<sand> &thesand)
 {
