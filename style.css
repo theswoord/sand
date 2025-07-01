@@ -1,0 +1,189 @@
+body {
+    background-color: #000;
+    display: flex; /* Use flexbox for body to manage console and game layout */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Press Start 2P', cursive;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden; /* Prevent body scrollbars */
+}
+
+/* Console Container */
+.console-container {
+    background-color: #000;
+    border: 2px solid #555;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    width: 80%;
+    max-width: 800px;
+    height: 60vh;
+    display: flex; /* Changed from block to flex */
+    flex-direction: column;
+    overflow: hidden;
+    position: relative; /* For z-index if needed */
+}
+
+.console-header {
+    background-color: #333;
+    color: #eee;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #555;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.console-title {
+    flex-grow: 1;
+}
+
+.console-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.console-button {
+    background-color: #555;
+    color: #eee;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #777;
+    font-size: 0.8em;
+}
+
+.console-button:hover {
+    background-color: #777;
+}
+
+.console-button.close {
+    background-color: #c00;
+    border-color: #f00;
+}
+
+.console-button.close:hover {
+    background-color: #e00;
+}
+
+.console-body {
+    flex-grow: 1;
+    background-color: #000;
+    color: #0f0;
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 1.1em;
+    white-space: pre-wrap;
+    word-break: break-all;
+    line-height: 1.4;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+}
+
+.console-body::-webkit-scrollbar {
+    width: 10px;
+}
+
+.console-body::-webkit-scrollbar-track {
+    background: #333;
+}
+
+.console-body::-webkit-scrollbar-thumb {
+    background: #0f0;
+    border: 1px solid #0a0;
+}
+
+.console-body::-webkit-scrollbar-thumb:hover {
+    background: #0c0;
+}
+
+.console-input-line {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #000;
+    border-top: 1px solid #050;
+}
+
+.prompt {
+    color: #0f0;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+#console-input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #0f0;
+    font-size: 1.1em;
+    caret-color: #0f0;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#console-input:focus {
+    animation: blink-caret 1s infinite step-end;
+}
+
+@keyframes blink-caret {
+    from, to { border-right: 0.08em solid #0f0; }
+    50% { border-right: 0.08em solid transparent; }
+}
+
+.command-echo {
+    color: #0f0;
+}
+
+/* --- Game Specific Styles --- */
+.game-container {
+    position: absolute; /* Position it absolutely to fill the screen */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black; /* Ensure background is black */
+    display: none; /* Initially hidden */
+    justify-content: center; /* Center the canvas */
+    align-items: center; /* Center the canvas */
+    flex-direction: column; /* Stack canvas and button vertically */
+}
+
+#gameCanvas {
+    /* Style your canvas as needed, but Emscripten usually handles size */
+    /* Ensure it scales nicely within its container */
+    max-width: 100%;
+    max-height: 100%;
+    display: block; /* Important to remove extra space below canvas */
+}
+
+.quit-game-button {
+    position: absolute; /* Position button relative to game-container */
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    background-color: #c00; /* Red button */
+    color: white;
+    border: 2px solid #f00;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* Red glow */
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.quit-game-button:hover {
+    background-color: #e00;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+}
+
+/* Error message style for console output */
+.error {
+    color: #f00; /* Red text for errors */
+    font-weight: bold;
+}

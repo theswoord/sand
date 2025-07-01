@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Awesome Sand Game</title>
+    <style>
+        body { margin: 0; overflow: hidden; } /* Remove body margin and scrollbars */
+        canvas.emscripten { display: block; } /* Remove default inline-block spacing */
+    </style>
+</head>
+<body>
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+
+    <script type='text/javascript'>
+        var Module = {
+            canvas: (function() {
+                var canvas = document.getElementById('canvas');
+                // Optional: Customize WebGL context lost behavior
+                canvas.addEventListener("webglcontextlost", function (e) {
+                    alert('WebGL context lost. You will need to reload the page.');
+                    e.preventDefault();
+                }, false);
+                return canvas;
+            })()
+            // You can add other Module properties here if needed
+            // e.g., print: (text) => console.log(text),
+            // printErr: (text) => console.error(text),
+        };
+    </script>
+    <script src="your_game.js"></script>
+</body>
+</html>

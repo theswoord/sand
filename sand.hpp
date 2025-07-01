@@ -1,6 +1,7 @@
 #include <iostream>
 // #include "/goinfre/nbouhali/homebrew/include/SDL2/SDL.h"
 #include "./SDL/include/SDL.h"
+#include <emscripten.h>
 
 #include <unistd.h>
 #include <vector>

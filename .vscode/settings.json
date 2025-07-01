@@ -73,7 +73,13 @@
         "semaphore": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "__verbose_abort": "cpp",
+        "execution": "cpp",
+        "print": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "variant": "cpp"
     },
-    "cmake.sourceDirectory": "/Users/nbouhali/Desktop/sand/SDL"
+    "cmake.sourceDirectory": "/home/nabil/sand/SDL"
 }
