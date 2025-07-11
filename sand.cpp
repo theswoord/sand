@@ -1,5 +1,41 @@
 #include "sand.hpp"
 
+
+void random_sand_gen(std::vector<std::vector<char> > &thesand)
+{
+
+    static std::random_device rd; // Obtain a seed from the hardware
+static std::mt19937 gen(rd()); // Seed the generator
+
+    int x = gen() % WWIDTH;
+    int y = gen() % WHEIGHT;
+
+    int picker = gen() % 4 + 1;
+
+    printf("i picked %d \n", picker);
+
+    int logicalX = x / sandsize;
+    int logicalY = y / sandsize;
+
+                int logicalW = WWIDTH / sandsize;
+                int logicalH = WHEIGHT / sandsize;
+
+                if (logicalY >= 0 && logicalY < logicalH-5 && logicalX >= 0 && logicalX < logicalW )
+                {
+                    if(thesand[logicalY+4][logicalX] == EMPTY){ // andzid ngad had randomizer ban lia 3yan hehe
+                    thesand[logicalY][logicalX] = picker;
+                    thesand[logicalY+1][logicalX] = picker;
+                    thesand[logicalY+2][logicalX] = picker;
+                    thesand[logicalY+3][logicalX] = picker;
+                    thesand[logicalY+4][logicalX] = picker;
+                    }
+                    // thesand[logicalY+1][logicalX+1] = SAND;
+                    // thesand[logicalY-1][logicalX-1] = SAND;
+
+                }
+}
+
+
 void show_sand(SDL_Surface *screen, SDL_Rect *rec, std::vector<sand> &thesand)
 {
 
@@ -27,12 +63,13 @@ void update_position_neo(std::vector<std::vector<char> > &thesand)
     {
         for (int x = logicalW - 1; x >= 0; --x) 
         {
-            if (thesand[y][x] == SAND)
+            if (thesand[y][x] != EMPTY)
             {
+                int what  = thesand[y][x];
 
                 if (y + 1 < logicalH && thesand[y+1][x] == EMPTY)
                 {
-                    thesand[y+1][x] = SAND;
+                    thesand[y+1][x] =what;
                     thesand[y][x] = EMPTY;
                 }
                 else if (y + 1 < logicalH)
@@ -42,12 +79,12 @@ void update_position_neo(std::vector<std::vector<char> > &thesand)
                      
                 if(canMoveRight)
                 {
-                        thesand[y+1][x+1] = SAND;
+                        thesand[y+1][x+1] = what;
                         thesand[y][x] = EMPTY;
                 }
                 else if(canMoveLeft)
                 {
-                        thesand[y+1][x-1] = SAND;
+                        thesand[y+1][x-1] = what;
                         thesand[y][x] = EMPTY;
                 }
                 }
@@ -102,18 +139,44 @@ for (int y = logicalH - 1; y >= 0; --y)
     {
         for (int x = logicalW - 1; x >= 0; --x) 
         {
+            rec->x = x * sandsize;
+            rec->y = y * sandsize;
+            rec->w = sandsize;
+            rec->h = sandsize;
             if (thesand[y][x] == SAND)
             {
-                rec->x = x * sandsize;
-                rec->y = y * sandsize;
-                rec->w = sandsize;
-                rec->h = sandsize;
-                // SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80));
+                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xF2, 0xD2, 0xA9)); // f2d2a9
                 // SDL_FillRect(screen, rec,  4290949760);
-                SDL_FillRect(screen, rec, rand_sand_color() );
+                // SDL_FillRect(screen, rec, rand_sand_color() );
                 // std::cout << SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80) << std::endl ;
 
             }
+            if (thesand[y][x] == WATER)
+            {
+                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0x99, 0xC0, 0xE3)); // f2d2a9
+                // SDL_FillRect(screen, rec,  4290949760);
+                // SDL_FillRect(screen, rec, rand_sand_color() );
+                // std::cout << SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80) << std::endl ;
+
+            }
+            if (thesand[y][x] == ROCK)
+            {
+                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0x7F, 0x83, 0x86)); // f2d2a9
+                // SDL_FillRect(screen, rec,  4290949760);
+                // SDL_FillRect(screen, rec, rand_sand_color() );
+                // std::cout << SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80) << std::endl ;
+
+            }
+                        if (thesand[y][x] == LADY)
+            {
+                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xFF, 0xA5, 0x00)); // f2d2a9
+                // SDL_FillRect(screen, rec,  4290949760);
+                // SDL_FillRect(screen, rec, rand_sand_color() );
+                // std::cout << SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80) << std::endl ;
+
+            }
+
+            
         }
     }
 }

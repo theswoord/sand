@@ -1,0 +1,29 @@
+body {
+    background-color: #000; /* Assuming you want a black background for the body */
+    display: flex;
+    flex-direction: column; /* Changed to column to stack elements vertically */
+    justify-content: center; /* Centers items along the main axis (vertical in column) */
+    align-items: center;   /* Centers items along the cross axis (horizontal in column) */
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Press Start 2P', cursive; /* Make sure this font is available or linked */
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+}
+
+
+.Game-area { /* This targets your canvas element */
+    /* Remove display: flex, justify-content, align-items from here.
+       The body is handling the centering. */
+    border: 2px solid blue; /* Changed border to be visible */
+    height: 800px; /* Use height and width attributes on the canvas for WebGL */
+    width: 600px; /* Use height and width attributes on the canvas for WebGL */
+    background-color: tomato; /* This background will be visible if WebGL doesn't draw */
+    /* Remove position: relative; it's not needed for basic centering here */
+}
+
+h1 {
+    color: white; /* Make your h1 text visible against the black background */
+    text-align: center; /* Center the text within the h1 */
+    margin-top: 20px; /* Add some space above the h1 if needed */
+}

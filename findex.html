@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Console with Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="console-container" id="consoleContainer">
+        <div class="console-header">
+            <span class="console-title">C:\ COMMAND.COM</span>
+            <div class="console-buttons">
+                <span class="console-button minimize">-</span>
+                <span class="console-button maximize">[]</span>
+                <span class="console-button close">X</span>
+            </div>
+        </div>
+        <div class="console-body">
+            <pre id="console-output"></pre>
+            <div class="console-input-line">
+                <span class="prompt">C:\></span><input type="text" id="console-input" autofocus>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-container" id="gameContainer">
+        <canvas class="emscripten" id="gameCanvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+        <button id="quitGameButton" class="quit-game-button">Quit Game</button>
+    </div>
+
+    <script>
+        const consoleContainer = document.getElementById('consoleContainer');
+        const gameContainer = document.getElementById('gameContainer');
+        const gameCanvas = document.getElementById('gameCanvas');
+        const quitGameButton = document.getElementById('quitGameButton');
+
+        const consoleOutput = document.getElementById('console-output');
+        const consoleInput = document.getElementById('console-input');
+
+        let gameModule = null; // To store the Emscripten Module object
+
+        const commands = {
+            'help': 'Available commands: help, about, date, clear, play',
+            'about': 'This is a simulated retro console with an integrated game!',
+            'date': new Date().toLocaleString(),
+            'clear': '',
+            'play': '' // Command to start the game
+        };
+
+        function appendToOutput(text, className = '') {
+            const line = document.createElement('span');
+            line.textContent = text;
+            if (className) {
+                line.classList.add(className);
+            }
+            consoleOutput.appendChild(line);
+            consoleOutput.appendChild(document.createElement('br'));
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        // --- Game Specific Functions ---
+        function loadAndRunGame() {
+            // Hide the console
+            consoleContainer.style.display = 'none';
+            // Show the game container
+            gameContainer.style.display = 'flex'; // Use flex to center the canvas
+
+            // appendToOutput('Loading your_game.js...');
+
+            // If the game script hasn't been loaded yet, load it
+            if (!gameModule) {
+                // Define the Module object for Emscripten
+                window.Module = {
+                    canvas: gameCanvas,
+                    // You can add other Module properties here if needed
+                    // e.g., print: (text) => appendToOutput('Game Log: ' + text),
+                    // printErr: (text) => appendToOutput('Game Error: ' + text, 'error'),
+                    onRuntimeInitialized: function() {
+                        appendToOutput('Game loaded and initialized!');
+                    }
+                };
+
+                const script = document.createElement('script');
+                script.src = 'your_game.js';
+                script.type = 'text/javascript';
+                script.onload = () => {
+                    appendToOutput('Game script loaded. Initializing game...');
+                    gameModule = window.Module; // Store the Module
+                    // Emscripten automatically runs the game after the script loads and Module is defined.
+                };
+                script.onerror = () => {
+                    appendToOutput('Error: Could not load your_game.js. Make sure it\'s in the correct directory.', 'error');
+                    quitGame(); // Go back to console on error
+                };
+                document.body.appendChild(script);
+            } else {
+                // If the game script was already loaded (e.g., user played before),
+                // Emscripten might need a way to 'restart' or 're-focus'.
+                // For most simple Emscripten games, showing the canvas again is enough.
+                // If your game requires re-initialization, you'd need to expose a function from `your_game.js`.
+                appendToOutput('Game already loaded. Displaying game...');
+                if (gameModule && typeof gameModule.canvas.focus === 'function') {
+                    gameModule.canvas.focus(); // Give focus back to the canvas
+                }
+            }
+            consoleInput.value = ''; // Clear the input after 'play'
+        }
+
+        function quitGame() {
+            appendToOutput('Returning to console...');
+            // Hide the game container
+            gameContainer.style.display = 'none';
+            // Show the console
+            consoleContainer.style.display = 'flex';
+            consoleOutput.scrollTop = consoleOutput.scrollHeight; // Scroll to bottom
+            consoleInput.focus(); // Give focus back to the console input
+        }
+
+        quitGameButton.addEventListener('click', quitGame); // Attach event listener to the quit button
+
+        // --- Main Console Logic ---
+        function processCommand(command) {
+            const lowerCommand = command.toLowerCase();
+            if (lowerCommand === 'play') {
+                loadAndRunGame();
+            } else {
+                const output = commands[lowerCommand];
+                if (output !== undefined) {
+                    if (lowerCommand === 'clear') {
+                        consoleOutput.innerHTML = '';
+                    } else {
+                        appendToOutput(output);
+                    }
+                } else {
+                    appendToOutput(`'${command}' is not recognized as an internal or external command, operable program or batch file.`);
+                }
+            }
+        }
+
+        // Initial welcome message
+        appendToOutput('Microsoft(R) Windows 98');
+        appendToOutput('(C)Copyright Microsoft Corp 1981-1999.');
+        appendToOutput('');
+        appendToOutput('Type "help" for a list of commands.');
+        appendToOutput('');
+
+
+        consoleInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const command = consoleInput.value.trim();
+                appendToOutput(`C:\\>${command}`, 'command-echo'); // Always echo in the console
+                processCommand(command);
+                consoleInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

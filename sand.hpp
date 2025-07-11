@@ -6,12 +6,19 @@
 #include <unistd.h>
 #include <vector>
 #include <random>
+#include <string>
 #define Velocity 3
 #define WWIDTH 800
 #define WHEIGHT 600
 #define sandsize 3
 #define EMPTY 0
 #define SAND 1
+#define WATER 2
+#define ROCK 3
+#define LADY 4
+
+
+
 
 
 
@@ -38,6 +45,7 @@ class sand
     int get_y_value();
 };
 
+void random_sand_gen(std::vector<std::vector<char> > &thesand);
 void show_sand(SDL_Surface *screen ,SDL_Rect *rec ,std::vector<sand> &thesand);
 void show_sand_neo(SDL_Surface *screen ,SDL_Rect *rec ,std::vector< std::vector<char> > &thesand);
 

@@ -79,7 +79,11 @@
         "print": "cpp",
         "queue": "cpp",
         "stack": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "charconv": "cpp",
+        "format": "cpp",
+        "iomanip": "cpp",
+        "span": "cpp"
     },
     "cmake.sourceDirectory": "/home/nabil/sand/SDL"
 }

@@ -7,7 +7,7 @@
                 "/home/nabil/emsdk/upstream/emscripten/cache/sysroot/include"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/bin/g++",
             "cStandard": "c17",
             "cppStandard": "c++14",
             "intelliSenseMode": "linux-clang-x64",
