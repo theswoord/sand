@@ -12,7 +12,7 @@ static std::mt19937 gen(rd()); // Seed the generator
 
     int picker = gen() % 4 + 1;
 
-    printf("i picked %d \n", picker);
+    // printf("i picked %d \n", picker);
 
     int logicalX = x / sandsize;
     int logicalY = y / sandsize;
@@ -88,19 +88,7 @@ void update_position_neo(std::vector<std::vector<char> > &thesand)
                         thesand[y][x] = EMPTY;
                 }
                 }
-                // if(y + 1 < logicalH && thesand[y+1][x] == SAND)
-                // {
-                //     if (y + 1 < logicalH && thesand[y+1][x+1] == EMPTY)
-                //     {
-                //             thesand[y+1][x+1] = SAND;
-                //             thesand[y][x] = EMPTY;
-                //     }
-                //      if(x > 0 && y + 1 < logicalH && thesand[y+1][x-1] == EMPTY)
-                //     {
-                //         thesand[y+1][x-1] = SAND;
-                //             thesand[y][x] = EMPTY;
-                //     }
-                // }
+
             }
         }
     }
@@ -146,33 +134,23 @@ for (int y = logicalH - 1; y >= 0; --y)
             if (thesand[y][x] == SAND)
             {
                 SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xF2, 0xD2, 0xA9)); // f2d2a9
-                // SDL_FillRect(screen, rec,  4290949760);
-                // SDL_FillRect(screen, rec, rand_sand_color() );
-                // std::cout << SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80) << std::endl ;
-
+             
             }
             if (thesand[y][x] == WATER)
             {
                 SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0x99, 0xC0, 0xE3)); // f2d2a9
-                // SDL_FillRect(screen, rec,  4290949760);
-                // SDL_FillRect(screen, rec, rand_sand_color() );
-                // std::cout << SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80) << std::endl ;
+   
 
             }
             if (thesand[y][x] == ROCK)
             {
                 SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0x7F, 0x83, 0x86)); // f2d2a9
-                // SDL_FillRect(screen, rec,  4290949760);
-                // SDL_FillRect(screen, rec, rand_sand_color() );
-                // std::cout << SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80) << std::endl ;
+
 
             }
                         if (thesand[y][x] == LADY)
             {
                 SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xFF, 0xA5, 0x00)); // f2d2a9
-                // SDL_FillRect(screen, rec,  4290949760);
-                // SDL_FillRect(screen, rec, rand_sand_color() );
-                // std::cout << SDL_MapRGB(screen->format, 0xC2, 0xB2, 0x80) << std::endl ;
 
             }
 
@@ -233,7 +211,3 @@ void sand::increment_y()
 {
     this->y += Velocity;
 }
-// bool sand::Get_move_status()
-// {
-//     return this->can_move;
-// }

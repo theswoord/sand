@@ -9,6 +9,46 @@
 // emcc main_wasm.cpp sand.cpp -o new.html -s USE_SDL=2 -s SDL2_IMAGE_FORMATS="['png','jpg']" -s USE_WEBGL2=1
 // emrun test.html --no-browser
 
+// emcc main_wasm.cpp sand.cpp \
+//     -o reactgame.js \
+//     -s USE_SDL=2 \
+//     -s SDL2_IMAGE_FORMATS="['png','jpg']" \
+//     -s USE_WEBGL2=1 \
+//     -s WASM=1 \
+//     -s MODULARIZE=1 \
+//     -s EXPORT_ES6=1 \
+//     -s INVOKE_RUN=0 \
+//     -s NO_EXIT_RUNTIME=1 \
+//     -s EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "getValue", "setValue", "UTF8ToString"]' \
+//     -s ALLOW_MEMORY_GROWTH=1 \
+//     -s INITIAL_MEMORY=64MB
+
+
+// emcc main_wasm.cpp sand.cpp \
+//     -o reactgame.js \
+//     -O3 \
+//     -s USE_SDL=2 \
+//     -s SDL2_IMAGE_FORMATS="['png','jpg']" \
+//     -s USE_WEBGL2=1 \
+//     -s WASM=1 \
+//     -s MODULARIZE=1 \
+//     -s EXPORT_ES6=1 \
+//     -s ENVIRONMENT=worker \
+//     -s INVOKE_RUN=0 \
+//     -s ALLOW_MEMORY_GROWTH=1 \
+//     -lembind
+
+// emcc main_wasm.cpp sand.cpp \
+//     -o reactgame.js \
+//     -O3 \
+//     -s USE_SDL=2 \
+//     -s WASM=1 \
+//     -s MODULARIZE=1 \
+//     -s EXPORT_ES6=1 \
+//     -s INVOKE_RUN=0 \
+//     -s ALLOW_MEMORY_GROWTH=1 \
+//     -lembind
+
 void PrintKeyInfo(SDL_KeyboardEvent *key)
 {
     /* Is it a release or a press? */
@@ -34,9 +74,7 @@ void PrintKeyInfo(SDL_KeyboardEvent *key)
     printf("\n");
 }
 
-void clear_window()
-{
-}
+
 typedef struct main_wasm
 {
     Uint32 frameStart;
@@ -58,6 +96,33 @@ typedef struct main_wasm
     int element;
     SDL_Window *window;
 } t_wasm;
+t_wasm *wasm = nullptr;
+
+
+extern "C" {
+  EMSCRIPTEN_KEEPALIVE
+  void cleanup() {
+    //   printf("C++ cleanup function called directly!\n");
+
+    SDL_DestroyWindow(wasm->window);
+    SDL_Quit();
+    emscripten_cancel_main_loop();
+    delete wasm;
+      fflush(stdout); // Force output to flush to the console
+
+    //   SDL_DestroyRenderer(renderer);
+
+  }
+}
+
+
+// void free_all(t_wasm *wasm)
+// {
+//     SDL_DestroyWindow(wasm->window);
+//     SDL_Quit();
+    
+//     delete wasm;
+// }
 
 void element_picked(t_wasm *wasm, std::string str)
 {
@@ -133,60 +198,11 @@ static std::mt19937 gen(rd()); // Seed the generator
         /* code */
     }
 
-    
-    // switch (std::stoi(str, 0, 10))
-    // {
-    // case (1):
-    //     break;
-    // case (2):
-    //     // wasm->element = SAND;
-    // wasm->element = LADY;
-
-    //     break;
-    // case (3):
-    //     // wasm->element = SAND;
-    // wasm->element = ROCK;
-
-    //     break;
-    // case (4):
-    //     // wasm->element = SAND;
-    // wasm->element = WATER;
-
-    //     break;
-
-    // default:
-    //     wasm->element = EMPTY;
-    //     break;
-    // }
 
 }
 Uint32 element_color(t_wasm *wasm)
 {
-    // if (wasm->element == ROCK)
-    // {
-    //     /* code */
-    // return (0xFF << 24 | 0x7F << 16 | 0x83 << 8  | 0x86 );
 
-    // }
-    //     if (wasm->element == SAND)
-    // {
-    //     /* code */
-    // return (0xFF << 24 |0xF2 << 16 | 0xD2 << 8  | 0xA9 );
-
-    // }
-    //     if (wasm->element == WATER)
-    // {
-    //     /* code */
-    // return (0xFF << 24 |0x99 << 16 | 0xC0 << 8  | 0xE3 );
-
-    // }
-    //     if (wasm->element == LADY)
-    // {
-    //     /* code */
-    // return (0xFF << 24 | 0xFF << 16 | 0xA5 << 8  | 0x00 ); 
-
-    // }
-    // return (0xFF << 24 | 0xFF << 16  | 0xFF << 8 | 0xFF );
      Uint8 r = 0, g = 0, b = 0; // Initialize for safety
 
     if (wasm->element == ROCK)
@@ -210,29 +226,12 @@ Uint32 element_color(t_wasm *wasm)
         r = 0xFF; g = 0xFF; b = 0xFF;
     }
 
-    // This is the crucial part: map the RGB values to the surface's format
     return SDL_MapRGB(wasm->screenSurface->format, r, g, b);
 }
 
 void init_window(std::vector<std::vector<char>> &map)
 {
-    // std::vector<char> line;
-    // int x,y;
-    // x=0;
-    // y=0;
 
-    // while (y < WHEIGHT)
-    // {
-    //     x=0;
-    //     while (x < WWIDTH)
-    //     {
-    //         line.push_back(EMPTY);
-    //         x++;
-    //     }
-    //     map.push_back(line);
-    //     line.clear();
-    //     y++;
-    // }
     int logicalW = WWIDTH / sandsize;
     int logicalH = WHEIGHT / sandsize;
     map.resize(logicalH);
@@ -320,7 +319,7 @@ void wasm_loop(void *ptr)
                 random_sand_gen(wasm->themap);
             }
 
-            PrintKeyInfo(&wasm->e.key);
+            // PrintKeyInfo(&wasm->e.key);
         }
     }
     if (wasm->hold)
@@ -363,24 +362,14 @@ void wasm_loop(void *ptr)
 
 int main()
 {
-
-    t_wasm *wasm = new t_wasm;
-    // SDL_memset(wasm,0,sizeof(t_wasm));
-    // init_all(wasm);
+    wasm = new t_wasm;
     if (init_all(wasm) != 0)
     {
-        // Handle initialization error
-        delete wasm; // Clean up allocated memory
+        delete wasm;
         return 1;
     }
 
-    // const int targetFPS = 60;
-
-    // std::vector<std::vector<char> > themap;
-    // emscripten_set_main_loop(wasm_loop(window), targetFPS, 1);
     emscripten_set_main_loop_arg(wasm_loop, wasm, wasm->targetFPS, 1);
-    // SDL_DestroyWindow(window);
-    // SDL_Quit();
-
+    
     return 0;
 }
