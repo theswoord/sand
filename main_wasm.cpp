@@ -175,7 +175,7 @@ static std::mt19937 gen(rd()); // Seed the generator
     }
         else if (str == "5")
     {
-        wasm->element = EMPTY;
+        wasm->element = SPONGE;
 
         /* code */
     }
@@ -216,6 +216,18 @@ Uint32 element_color(t_wasm *wasm)
     else if (wasm->element == WATER)
     {
         r = 0x99; g = 0xC0; b = 0xE3; // Example: water
+    }
+    else if (wasm->element == WETSAND)
+    {
+        r = 0xAE; g = 0x8F; b = 0x60; // Example: water
+    }
+    else if (wasm->element == ZINJAR)
+    {
+        r = 0xA1; g = 0xBA; b = 0xA1; // Example: water
+    }
+        else if (wasm->element == SPONGE)
+    {
+        r = 0xFD; g = 0xFE; b = 0x03; // Example: water
     }
     else if (wasm->element == LADY)
     {
@@ -258,7 +270,7 @@ int init_all(t_wasm *wasm)
     wasm->particle = {0, 0, sandsize, sandsize};
     wasm->frameTime = 0;
     wasm->targetFPS = 60;
-    wasm->element = EMPTY;
+    wasm->element = WATER; // water to debug
     wasm->frameDelay = 1000 / wasm->targetFPS;
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -331,7 +343,12 @@ void wasm_loop(void *ptr)
         int logicalW = WWIDTH / sandsize;
         int logicalH = WHEIGHT / sandsize;
 
-        if (logicalY >= 0 && logicalY < logicalH && logicalX >= 0 && logicalX < logicalW)
+        if (logicalY >= 0 && logicalY < logicalH && logicalX >= 0 && logicalX < logicalW&&wasm->element == EMPTY)
+        {
+            wasm->themap[logicalY][logicalX] = wasm->element;
+        }
+        
+       else if (logicalY >= 0 && logicalY < logicalH && logicalX >= 0 && logicalX < logicalW && wasm->themap[logicalY][logicalX] == EMPTY )
         {
             wasm->themap[logicalY][logicalX] = wasm->element;
         }

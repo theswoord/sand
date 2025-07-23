@@ -12,7 +12,7 @@ linux :
 	g++ -o sand_linux main_linux.cpp sand.cpp `sdl2-config --cflags --libs`
 
 
-wasm :
+wasme :
 	emcc main_wasm.cpp sand.cpp     -o ../react_wasm/sand-app/src/game/reactgame.js \
 	-s USE_SDL=2 \
 	-s WASM=1 \

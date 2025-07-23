@@ -51,69 +51,6 @@ void show_sand(SDL_Surface *screen, SDL_Rect *rec, std::vector<sand> &thesand)
         /* code */
     }
 }
-int sides(std::vector<std::vector<char>> &thesand, int y, int x, int element)
-{
-    int logicalW = WWIDTH / sandsize;
-    int logicalH = WHEIGHT / sandsize;
-    
-    if (y <= 0 || y >= logicalH - 1 || x <= 0 || x >= logicalW - 1) {
-        return 0; 
-    }
-    
-    if (thesand[y + 1][x] != EMPTY && thesand[y + 1][x] != element) {
-        return DOWN; // Bottom
-    }
-    if (thesand[y - 1][x] != EMPTY && thesand[y - 1][x] != element) {
-        return UP; // Top
-    }
-    if (thesand[y][x + 1] != EMPTY && thesand[y][x + 1] != element) {
-        return RIGHT; // Right
-    }
-    if (thesand[y][x - 1] != EMPTY && thesand[y][x - 1] != element) {
-        return LEFT; // Left
-    }
-
-    return 0; 
-}
-int get_element(std::vector<std::vector<char>> &thesand, int x, int y, int side)
-{
-    if (side == 8)
-    {
-        return thesand[y - 1][x];
-    }
-    if (side == 2)
-    {
-        return thesand[y + 1][x];
-    }
-    if (side == 4)
-    {
-        return thesand[y][x - 1];
-    }
-    if (side == 6)
-    {
-        return thesand[y][x + 1];
-    }
-
-    return EMPTY;
-}
-void reactions(std::vector<std::vector<char>> &thesand, int y, int x, int Host, int Guest)
-{
-    if (Host == SAND && Guest == WATER)
-    {
-        thesand[y][x] = WETSAND;
-        /* code */
-    }
-    if (Host == WATER && Guest == SPONGE)
-    {
-        thesand[y][x] = EMPTY;
-        /* code */
-    }
-        if (Host == LADY && Guest == WATER)
-    {
-        thesand[y][x] = ZINJAR;
-        /* code */
-    }
-}
 
 void specific_element(std::vector<std::vector<char>> &thesand, int *y, int *x, int what)
 {
@@ -121,25 +58,13 @@ void specific_element(std::vector<std::vector<char>> &thesand, int *y, int *x, i
     int logicalH = WHEIGHT / sandsize;
     static std::random_device rd;  // Obtain a seed from the hardware
     static std::mt19937 gen(rd()); // Seed the generator
-    int side = sides(thesand, *y, *x, what);
-
     if (what == SAND)
     {
-
         if (*y + 1 < logicalH && thesand[*y + 1][*x] == EMPTY)
         {
             thesand[*y + 1][*x] = what;
             thesand[*y][*x] = EMPTY;
-            return;
         }
-
-        // if (*y + 1 < logicalH && thesand[*y + 1][*x] == WATER)
-        // {
-        //     thesand[*y + 1][*x] = WETSAND;
-        //     thesand[*y][*x] = EMPTY;
-        //     return;
-        // }
-
         else if (*y + 1 < logicalH)
         {
             bool canMoveLeft = (*x - 1 >= 0 && thesand[*y + 1][*x - 1] == EMPTY);
@@ -156,133 +81,69 @@ void specific_element(std::vector<std::vector<char>> &thesand, int *y, int *x, i
                 thesand[*y][*x] = EMPTY;
             }
         }
-        if (side != 0)
-        {
-            // printf("makaynch bo7di\n");
-            /* code */
-            reactions(thesand, *y, *x, what, get_element(thesand, *x, *y, side));
-        }
     }
     if (what == ROCK)
     {
-        if (*y + 1 < logicalH && thesand[*y + 1][*x] == EMPTY || thesand[*y + 1][*x] == WATER)
-        {
-            thesand[*y + 1][*x] = what;
-            thesand[*y][*x] = EMPTY;
-        }
-    }
-
-    if (what == LADY)
-    {
-        // if (*y + 1 < logicalH && thesand[*y + 1][*x] == WATER)
-        // {
-        //     // thesand[*y + 1][*x] = ZINJAR;
-        //     // thesand[*y][*x] = WATER;
-        //     return;
-        // }
-
-        if (*y + 1 < logicalH && thesand[*y + 1][*x] == EMPTY  || thesand[*y + 1][*x] == WATER)
-        {
-            thesand[*y + 1][*x] = what;
-            thesand[*y][*x] = EMPTY;
-            return;
-        }
-                if (side != 0)
-        {
-            reactions(thesand, *y, *x, what, get_element(thesand, *x, *y, side));
-            /* code */
-        }
-    }
-    if (what == SPONGE)
-    {
         if (*y + 1 < logicalH && thesand[*y + 1][*x] == EMPTY)
         {
             thesand[*y + 1][*x] = what;
             thesand[*y][*x] = EMPTY;
-            return;
-        }
-        if (*y + 1 < logicalH && thesand[*y + 1][*x] == WATER) // sponge
-        {
-            thesand[*y + 1][*x] = EMPTY;
-
-            // thesand[*y + 1][*x] = ZINJAR;
-            // thesand[*y][*x] = EMPTY;
-            return;
         }
     }
+    // if (what == ACID)
+    // {
+    //     int dir = (gen() % 2) * 2 - 1;
+    //     // printf("%d \n", dir);
+    //     if (*y + 1 < logicalH && thesand[*y + 1][*x] == EMPTY)
+    //     {
+    //         thesand[*y + 1][*x] = what;
+    //         thesand[*y][*x] = EMPTY;
+    //         return ;
+    //     }
+    //     if( *x - 1 >= 0 && *x + 1 < logicalW && thesand[*y ][*x+1] == EMPTY || thesand[*y ][*x-1] == EMPTY  )
+    //     {
 
+    //         thesand[*y][*x + dir] = what;
+    //         thesand[*y][*x] = EMPTY;
+    //     }
+    // }
     if (what == WATER)
-    { // khdam for now !
-        // First priority: try to fall down
+    {
+        // int dir = (gen() % 2) * 2 - 1;
+        static int direction = 1;
+        // printf("%d \n", dir);
         if (*y + 1 < logicalH && thesand[*y + 1][*x] == EMPTY)
         {
             thesand[*y + 1][*x] = what;
             thesand[*y][*x] = EMPTY;
             return;
         }
-
-        // Second priority: move horizontally
-        // Generate random direction (-1 or 1)
-        int dir = (gen() % 2) * 2 - 1;
-
-        // Check if we can move in the random direction first
-        if (*x + dir >= 0 && *x + dir < logicalW && thesand[*y][*x + dir] == EMPTY)
-        {
-            thesand[*y][*x + dir] = what;
-            thesand[*y][*x] = EMPTY;
-            return;
-        }
-
-        // If random direction is blocked, try the opposite direction
-        dir *= -1;
-        if (*x + dir >= 0 && *x + dir < logicalW && thesand[*y][*x + dir] == EMPTY)
-        {
-            thesand[*y][*x + dir] = what;
-            thesand[*y][*x] = EMPTY;
-            return;
-        }
-
-        if (side != 0)
-        {
-            reactions(thesand, *y, *x, what, get_element(thesand, *x, *y, side));
-            /* code */
-        }
-        // If both horizontal directions are blocked, water stays in place
+    if (*x + direction >= logicalW || *x + direction < 0 || thesand[*y][*x + direction] != EMPTY)
+    {
+        direction *= -1;
+    }
+    if (*x + direction < logicalW && *x + direction >= 0 && thesand[*y][*x + direction] == EMPTY)
+    {
+        thesand[*y][*x + direction] = what;
+        thesand[*y][*x] = EMPTY;
+        return;
+    }
     }
 }
 
 void update_position_neo(std::vector<std::vector<char>> &thesand)
 {
-    static bool scanLeftToRight = false; // Static variable to remember direction
-    scanLeftToRight = !scanLeftToRight;  // Flip direction each frame
-
     int logicalW = WWIDTH / sandsize;
     int logicalH = WHEIGHT / sandsize;
 
     for (int y = logicalH - 1; y >= 0; --y)
     {
-        if (scanLeftToRight)
+        for (int x = logicalW - 1; x >= 0; --x)
         {
-            // Scan left to right
-            for (int x = 0; x < logicalW; ++x)
+            if (thesand[y][x] != EMPTY)
             {
-                if (thesand[y][x] != EMPTY)
-                {
-                    int what = thesand[y][x];
-                    specific_element(thesand, &y, &x, what);
-                }
-            }
-        }
-        else
-        {
-            // Scan right to left
-            for (int x = logicalW - 1; x >= 0; --x)
-            {
-                if (thesand[y][x] != EMPTY)
-                {
-                    int what = thesand[y][x];
-                    specific_element(thesand, &y, &x, what);
-                }
+                int what = thesand[y][x];
+                specific_element(thesand, &y, &x, what);
             }
         }
     }
@@ -336,18 +197,6 @@ void show_sand_neo(SDL_Surface *screen, SDL_Rect *rec, std::vector<std::vector<c
             if (thesand[y][x] == LADY)
             {
                 SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xFF, 0xA5, 0x00)); // f2d2a9
-            }
-            if (thesand[y][x] == ZINJAR)
-            {
-                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xA1, 0xBA, 0xA1)); // f2d2a9
-            }
-            if (thesand[y][x] == WETSAND)
-            {
-                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xAE, 0x8F, 0x60)); // f2d2a9
-            }
-            if (thesand[y][x] == SPONGE)
-            {
-                SDL_FillRect(screen, rec, SDL_MapRGB(screen->format, 0xFD, 0xFE, 0x03)); // f2d2a9
             }
         }
     }

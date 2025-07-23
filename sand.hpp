@@ -11,14 +11,24 @@
 #define WWIDTH 800
 #define WHEIGHT 600
 #define sandsize 3
+#define UP 8
+#define DOWN 2
+#define LEFT 4
+#define RIGHT 6
 #define EMPTY 0
 #define SAND 1
 #define WATER 2
 #define ROCK 3
 #define LADY 4
+#define WETSAND 5
+#define ZINJAR 6
+#define SPONGE 7
 
 
 
+
+// std::random_device rd; // Obtain a seed from the hardware
+// std::mt19937 gen(rd());
 
 
 
